@@ -2,4 +2,4 @@
 
 exclude = .git, .tox, .eggs, __pycache__, build, dist, docs, venv, .venv, .mypy_cache, .pytest_cache, .cache, .coverage, .coverage.*, _types.py
 max-line-length = 120
-extend-ignore = F401, F403, E303
+extend-ignore = F401, F403, E303, E501
