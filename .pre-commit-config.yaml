@@ -4,6 +4,7 @@ ci:
     - poetry-check
     - poetry-lock
     - poetry-export
+    - check-yaml
 
 repos:
   - repo: https://github.com/python-poetry/poetry
