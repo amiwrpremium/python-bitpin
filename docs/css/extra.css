@@ -1,0 +1,30 @@
+.highlight .gp, .highlight .go { /* Generic.Prompt, Generic.Output */
+    user-select: none;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+@keyframes rateLimit {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+        color: #ff0000;
+    }
+}
+
+.pulse {
+    animation: pulse 1000ms infinite;
+}
+
+.rateLimit {
+    animation: rateLimit 1000ms infinite;
+}

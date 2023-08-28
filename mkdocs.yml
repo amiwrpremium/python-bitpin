@@ -1,0 +1,90 @@
+site_name: Python Bitpin
+site_author: Amir Mahdi Erfani
+
+repo_name: amiwrpremium/python-bitpin
+repo_url: https://github.com/amiwrpremium/python-bitpin
+
+theme:
+  name: material
+  repo: fontawesome/brands/github
+
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - navigation.sections
+    - search.highlight
+    - search.suggest
+    - search.suggest.highlight
+    - content.code.annotate
+    - content.tabs.link
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate
+
+
+plugins:
+  - mkdocstrings
+  - autorefs
+  - search
+  - gen-files:
+      scripts:
+        - docs/gen_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - section-index
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      use_pygments: true
+      guess_lang: true
+      pygments_lang_class: true
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - attr_list
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/amiwrpremium
+    - icon: fontawesome/brands/instagram
+      link: https://instagram.com/amiwr._._
+    - icon: fontawesome/brands/telegram
+      link: https://t.me/This_Username_Is_Already_Taken
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/AmirMahdiErfani
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/amiwrpremium
+
+
+nav:
+  - Introduction: index.md
+  - Examples: examples/
+  - Code Reference: reference/
+
+
+extra_css:
+  - css/extra.css
