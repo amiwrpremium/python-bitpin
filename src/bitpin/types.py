@@ -67,12 +67,12 @@ InnerOrderbookResponse = t.TypedDict(
     {
         "amount": str,
         "price": str,
-        "remaining": str,
+        "remain": str,
         "value": str,
     },
 )
 
-OrderbookResponse = t.TypedDict("OrderbookResponse", {"order": t.List[InnerOrderbookResponse], "volume": str})
+OrderbookResponse = t.TypedDict("OrderbookResponse", {"orders": t.List[InnerOrderbookResponse], "volume": str})
 
 InnerTradeResponse = t.TypedDict(
     "InnerTradeResponse",
