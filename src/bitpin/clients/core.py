@@ -28,11 +28,12 @@ class CoreClient(ABC):
     ORDERS_URL = "odr/orders/"
     USER_TRADES_URL = "odr/matches/?type={}"
 
-    def __init__(
+    def __init__(  # type: ignore[no-untyped-def]
         self,
         api_key: t.OptionalStr = None,
         api_secret: t.OptionalStr = None,
         requests_params: t.OptionalDictStrAny = None,
+        **kwargs,
     ):
         """
         Constructor.
@@ -41,16 +42,22 @@ class CoreClient(ABC):
             api_key (str): API key.
             api_secret (str): API secret.
             requests_params (dict): Requests params.
+
+        Keyword Args:
+            access_token (str): Access token.
+            refresh_token (str): Refresh token.
         """
 
         self.api_key = api_key
         self.api_secret = api_secret
 
-        self.access_token: t.OptionalStr = None
-        self.refresh_token: t.OptionalStr = None
+        self.access_token: t.OptionalStr = kwargs.get("access_token")
+        self.refresh_token: t.OptionalStr = kwargs.get("refresh_token")
 
         self._requests_params = requests_params
         self.session = self._init_session()
+
+        self._hande_login()
 
     def _get_request_kwargs(self, method: t.RequestMethods, signed: bool, **kwargs) -> t.DictStrAny:  # type: ignore[no-untyped-def]
         kwargs["timeout"] = self.REQUEST_TIMEOUT
@@ -87,6 +94,32 @@ class CoreClient(ABC):
 
     def _create_api_uri(self, path: str, version: str = PUBLIC_API_VERSION_1) -> str:
         return self.API_URL + "/" + str(version) + "/" + path
+
+    def _hande_login(self) -> bool:
+        """
+        Handle login.
+
+        Returns:
+            bool: True if login was successful.
+        """
+
+        if self.api_key and self.api_secret:
+            if not self.refresh_token:
+                import requests  # pylint: disable=import-outside-toplevel
+
+                _: t.LoginResponse = requests.post(
+                    "https://api.bitpin.ir/v1/usr/api/login/",
+                    headers={"Content-Type": "application/json"},
+                    json={"api_key": self.api_key, "secret_key": self.api_secret},
+                    timeout=self.REQUEST_TIMEOUT,
+                ).json()
+
+                self.refresh_token = _["refresh"]
+                self.access_token = _["access"]
+
+            return True
+
+        return False
 
     @abstractmethod
     def _init_session(self) -> t.HttpSession:
