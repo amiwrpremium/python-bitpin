@@ -1,5 +1,6 @@
-"""# Abstract Client."""
+"""# Core Client."""
 
+import os
 from abc import (
     ABC,
     abstractmethod,
@@ -8,7 +9,7 @@ from .. import types as t
 
 
 class CoreClient(ABC):
-    """Abstract Client."""
+    """Core Client."""
 
     API_URL = "https://api.bitpin.ir"
 
@@ -46,13 +47,24 @@ class CoreClient(ABC):
         Keyword Args:
             access_token (str): Access token.
             refresh_token (str): Refresh token.
+
+        Notes:
+            If `api_key` and `api_secret` are not provided, they will be read from the environment variables
+            `BITPIN_API_KEY` and `BITPIN_API_SECRET` respectively.
+
+            If `access_token` and `refresh_token` are not provided, they will be read from the environment variables
+            `BITPIN_ACCESS_TOKEN` and `BITPIN_REFRESH_TOKEN` respectively.
+
+            If `requests_params` are provided, they will be used as default for every request.
+
+            If `requests_params` are provided in `kwargs`, they will override existing `requests_params`.
         """
 
-        self.api_key = api_key
-        self.api_secret = api_secret
+        self.api_key = api_key or os.environ.get("BITPIN_API_KEY")
+        self.api_secret = api_secret or os.environ.get("BITPIN_API_SECRET")
 
-        self.access_token: t.OptionalStr = kwargs.get("access_token")
-        self.refresh_token: t.OptionalStr = kwargs.get("refresh_token")
+        self.access_token: t.OptionalStr = kwargs.get("access_token", os.environ.get("BITPIN_ACCESS_TOKEN"))
+        self.refresh_token: t.OptionalStr = kwargs.get("refresh_token", os.environ.get("BITPIN_REFRESH_TOKEN"))
 
         self._requests_params = requests_params
         self.session = self._init_session()
