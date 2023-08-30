@@ -363,7 +363,7 @@ class CoreClient(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_open_orders(  # type: ignore[no-untyped-def]
+    def get_user_orders(  # type: ignore[no-untyped-def]
         self,
         market_id: t.OptionalInt = None,
         type: t.OptionalOrderTypes = None,  # pylint: disable=redefined-builtin
@@ -373,7 +373,7 @@ class CoreClient(ABC):
         **kwargs,
     ) -> t.OpenOrdersResponse:
         """
-        Get open orders.
+        Get user orders.
 
         Args:
             market_id (int): Market ID.

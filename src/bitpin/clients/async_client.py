@@ -30,7 +30,7 @@ class AsyncClient(CoreClient):
         get_wallets: Get wallets.
         get_orderbook: Get orderbook.
         get_recent_trades: Get recent trades.
-        get_open_orders: Get open orders.
+        get_user_orders: Get user orders.
         create_order: Create order.
         cancel_order: Cancel order.
         get_user_trades: Get user trades.
@@ -358,7 +358,7 @@ class AsyncClient(CoreClient):
 
         return await self._get(self.RECENT_TRADES_URL.format(market_id), **kwargs)  # type: ignore[return-value]
 
-    async def get_open_orders(  # type: ignore[no-untyped-def, override]
+    async def get_user_orders(  # type: ignore[no-untyped-def, override]
         self,
         market_id: t.OptionalInt = None,
         type: t.OptionalOrderTypes = None,  # pylint: disable=redefined-builtin
@@ -368,7 +368,7 @@ class AsyncClient(CoreClient):
         **kwargs,
     ) -> t.OpenOrdersResponse:
         """
-        Get open orders.
+        Get user orders.
 
         Args:
             market_id (int): Market ID.

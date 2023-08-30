@@ -477,29 +477,29 @@ Get recent trades.
 [{'time': 1647174307.768419, 'price': '1019000000', 'value': '11075213', 'match_amount': '0.01086870', 'type': 'sell', 'match_id': '73802972_73807087'}, {'time': 1647174307.656013, 'price': '1019000000', 'value': '5859993', 'match_amount': '0.00575072', 'type': 'sell', 'match_id': '73802711_73807087'}, {'time': 1647174307.605909, 'price': '1019000000', 'value': '18496580', 'match_amount': '0.01815169', 'type': 'sell', 'match_id': '73769110_73807087'}, {'time': 1647174307.547822, 'price': '1020000000', 'value': '4365538', 'match_amount': '0.00427993', 'type': 'sell', 'match_id': '73783129_73807087'}, {'time': 1647174307.497821, 'price': '1020020000', 'value': '883459', 'match_amount': '0.00086611', 'type': 'sell', 'match_id': '73800260_73807087'}]
 ```
 
-## Get User Open Orders
+## Get User Orders
 
-Get user open orders.
+Get user orders.
 
 !!! warning
     :material-car-speed-limiter:{ .rateLimit } 1000/hour.
 
 ??? code-ref "Reference"
 
-    - Sync Code Reference: [Client.get_open_orders](../reference/clients#src.bitpin.clients.client.Client.get_open_orders)
-    - Async Code Reference: [AsyncClient.get_open_orders](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_open_orders)
-    - API Documentation Reference: [Get User Open Orders](https://docs.bitpin.ir/#8a7c2a2af5)
+    - Sync Code Reference: [Client.get_user_orders](../reference/clients#src.bitpin.clients.client.Client.get_user_orders)
+    - Async Code Reference: [AsyncClient.get_user_orders](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_user_orders)
+    - API Documentation Reference: [Get User Orders](https://docs.bitpin.ir/#8a7c2a2af5)
 
 === "Sync"
 
-    ```python title="get_open_orders.py" linenums="1"
+    ```python title="get_user_orders.py" linenums="1"
     from bitpin import Client
 
     client = Client("<API_KEY>", "<API_SECRET>")
 
     def main():
-        open_orders = client.get_open_orders()
-        print(open_orders)
+        user_orders = client.get_user_orders()
+        print(user_orders)
 
 
     if __name__ == "__main__":
@@ -508,7 +508,7 @@ Get user open orders.
 
 === "Async"
 
-    ```python title="get_open_orders_async.py" linenums="1"
+    ```python title="get_user_orders_async.py" linenums="1"
     import asyncio
     from bitpin import AsyncClient
 
@@ -516,8 +516,8 @@ Get user open orders.
 
 
     async def main():
-        open_orders = await client.get_open_orders()
-        print(open_orders)
+        user_orders = await client.get_user_orders()
+        print(user_orders)
 
 
     if __name__ == "__main__":
