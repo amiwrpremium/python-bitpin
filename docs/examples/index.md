@@ -4,11 +4,26 @@ Here are some examples which help you to get started with the library.
 
 ## Initiate
 
-You can initiate the client with or without request params.
+Initiate client.
 
-??? note "See Also"
+!!! note "Authentication"
 
-    Code Reference: [Client](../reference/clients)
+    You can pass `api_key` and `api_secret` to client or set them as environment variables.
+
+    When you pass them to client, they will override environment variables.
+
+    If `api_key` and `api_secret` are provided, client will login automatically and get access and refresh tokens.
+
+!!! tip "Environment variables are also supported."
+
+    - :material-variable: `BITPIN_API_KEY` - API key.
+    - :material-variable: `BITPIN_API_SECRET` - API secret.
+    - :material-variable: `BITPIN_ACCESS_TOKEN` - Access token.
+    - :material-variable: `BITPIN_REFRESH_TOKEN` - Refresh token.
+
+??? code-ref "Reference"
+
+    - Code Reference: [Client](../reference/clients)
 
 === "Sync"
 
@@ -27,7 +42,11 @@ You can initiate the client with or without request params.
     client = AsyncClient("<API_KEY>", "<API_SECRET>")
     ```
 
-=== "With Request Params"
+### With Request Params
+
+You can pass [requests](https://docs.python-requests.org/en/master/) OR [aiohttp](https://docs.aiohttp.org/en/stable/) params to client.
+
+=== "Sync"
 
     ``` python title="with_request_params.py" linenums="1"
     from bitpin import Client
@@ -37,7 +56,7 @@ You can initiate the client with or without request params.
     })
     ```
 
-=== "Async With Request Params"
+=== "Async"
 
     ``` python title="async_with_request_params.py" linenums="1"
     import asyncio
@@ -52,15 +71,15 @@ You can initiate the client with or without request params.
 
 Login to get access and refresh tokens.
 
-:warning:{ .pulse } Access token is valid for 15 minutes and refresh token is valid for 7 days.
+!!! warning
 
-??? reference "Reference"
+    Access token is valid for 15 minutes and refresh token is valid for 7 days.
 
-    Sync Code Reference: [Client.login](../reference/clients#src.bitpin.clients.client.Client.login)
+??? code-ref "Reference"
 
-    Async Code Reference: [AsyncClient.login](../reference/clients#src.bitpin.clients.async_client.AsyncClient.login)
-
-    API Reference: [Login](https://docs.bitpin.ir/#02c24a5326)
+    - Sync Code Reference: [Client.login](../reference/clients#src.bitpin.clients.client.Client.login)
+    - Async Code Reference: [AsyncClient.login](../reference/clients#src.bitpin.clients.async_client.AsyncClient.login)
+    - API Documentation Reference: [Login](https://docs.bitpin.ir/#02c24a5326)
 
 === "Sync"
 
@@ -108,13 +127,11 @@ Login to get access and refresh tokens.
 
 Refresh access token.
 
-??? reference "See Also"
+??? code-ref "Reference"
 
-    Sync Code Reference: [Client.refresh_access_token](../reference/clients#src.bitpin.clients.client.Client.refresh_access_token)
-
-    Async Code Reference: [AsyncClient.refresh_access_token](../reference/clients#src.bitpin.clients.async_client.AsyncClient.refresh_access_token)
-
-    API Reference: [Refresh Token](https://docs.bitpin.ir/#9b81094f74)
+    - Sync Code Reference: [Client.refresh_access_token](../reference/clients#src.bitpin.clients.client.Client.refresh_access_token)
+    - Async Code Reference: [AsyncClient.refresh_access_token](../reference/clients#src.bitpin.clients.async_client.AsyncClient.refresh_access_token)
+    - API Documentation Reference: [Refresh Token](https://docs.bitpin.ir/#9b81094f74)
 
 === "Sync"
 
@@ -161,13 +178,11 @@ Refresh access token.
 
 Get user info.
 
-??? reference "See Also"
+??? code-ref "Reference"
 
-    Sync Code Reference: [Client.get_user_info](../reference/clients#src.bitpin.clients.client.Client.get_user_info)
-
-    Async Code Reference: [AsyncClient.get_user_info](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_user_info)
-
-    API Reference: [Get User Info](https://docs.bitpin.ir/#5b3c85d79e)
+    - Sync Code Reference: [Client.get_user_info](../reference/clients#src.bitpin.clients.client.Client.get_user_info)
+    - Async Code Reference: [AsyncClient.get_user_info](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_user_info)
+    - API Documentation Reference: [Get User Info](https://docs.bitpin.ir/#5b3c85d79e)
 
 === "Sync"
 
@@ -212,15 +227,14 @@ Get user info.
 
 Get currencies list.
 
-:material-car-speed-limiter:{ .rateLimit } 10000/day or 200/minute if you are authenticated.
+!!! warning
+    :material-car-speed-limiter:{ .rateLimit } 10000/day or 200/minute if you are authenticated.
 
-??? reference "See Also"
+??? code-ref "Reference"
 
-    Sync Code Reference: [Client.get_currencies_list](../reference/clients#src.bitpin.clients.client.Client.get_currencies_info)
-
-    Async Code Reference: [AsyncClient.get_currencies_list](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_currencies_info)
-
-    API Reference: [Get Currencies List](https://docs.bitpin.ir/#7e59da3d0d)
+    - Sync Code Reference: [Client.get_currencies_list](../reference/clients#src.bitpin.clients.client.Client.get_currencies_info)
+    - Async Code Reference: [AsyncClient.get_currencies_list](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_currencies_info)
+    - API Documentation Reference: [Get Currencies List](https://docs.bitpin.ir/#7e59da3d0d)
 
 === "Sync"
 
@@ -265,15 +279,14 @@ Get currencies list.
 
 Get markets info.
 
-:material-car-speed-limiter:{ .rateLimit } 10000/day or 200/minute if you are authenticated.
+!!! warning
+    :material-car-speed-limiter:{ .rateLimit } 10000/day or 200/minute if you are authenticated.
 
-??? reference "See Also"
+??? code-ref "Reference"
 
-    Sync Code Reference: [Client.get_markets_info](../reference/clients#src.bitpin.clients.client.Client.get_markets_info)
-
-    Async Code Reference: [AsyncClient.get_markets_info](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_markets_info)
-
-    API Reference: [Get Markets Info](https://docs.bitpin.ir/#334792bb2b)
+    - Sync Code Reference: [Client.get_markets_info](../reference/clients#src.bitpin.clients.client.Client.get_markets_info)
+    - Async Code Reference: [AsyncClient.get_markets_info](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_markets_info)
+    - API Documentation Reference: [Get Markets Info](https://docs.bitpin.ir/#334792bb2b)
 
 === "Sync"
 
@@ -318,15 +331,14 @@ Get markets info.
 
 Get wallets and balances.
 
-:material-car-speed-limiter:{ .rateLimit } 10000/day.
+!!! warning
+    :material-car-speed-limiter:{ .rateLimit } 10000/day.
 
-??? reference "See Also"
+??? code-ref "Reference"
 
-    Sync Code Reference: [Client.get_wallets](../reference/clients#src.bitpin.clients.client.Client.get_wallets)
-
-    Async Code Reference: [AsyncClient.get_wallets](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_wallets)
-
-    API Reference: [Get Wallets](https://docs.bitpin.ir/#9b93495188)
+    - Sync Code Reference: [Client.get_wallets](../reference/clients#src.bitpin.clients.client.Client.get_wallets)
+    - Async Code Reference: [AsyncClient.get_wallets](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_wallets)
+    - API Documentation Reference: [Get Wallets](https://docs.bitpin.ir/#9b93495188)
 
 === "Sync"
 
@@ -371,13 +383,11 @@ Get wallets and balances.
 
 Get orderbook.
 
-??? reference "See Also"
+??? code-ref "Reference"
 
-    Sync Code Reference: [Client.get_orderbook](../reference/clients#src.bitpin.clients.client.Client.get_orderbook)
-
-    Async Code Reference: [AsyncClient.get_orderbook](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_orderbook)
-
-    API Reference: [Get Orderbook](https://docs.bitpin.ir/#270b5bd78d)
+    - Sync Code Reference: [Client.get_orderbook](../reference/clients#src.bitpin.clients.client.Client.get_orderbook)
+    - Async Code Reference: [AsyncClient.get_orderbook](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_orderbook)
+    - API Documentation Reference: [Get Orderbook](https://docs.bitpin.ir/#270b5bd78d)
 
 === "Sync"
 
@@ -422,13 +432,11 @@ Get orderbook.
 
 Get recent trades.
 
-??? reference "See Also"
+??? code-ref "Reference"
 
-    Sync Code Reference: [Client.get_recent_trades](../reference/clients#src.bitpin.clients.client.Client.get_recent_trades)
-
-    Async Code Reference: [AsyncClient.get_recent_trades](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_recent_trades)
-
-    API Reference: [Get Recent Trades](https://docs.bitpin.ir/#1dd63530b5)
+    - Sync Code Reference: [Client.get_recent_trades](../reference/clients#src.bitpin.clients.client.Client.get_recent_trades)
+    - Async Code Reference: [AsyncClient.get_recent_trades](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_recent_trades)
+    - API Documentation Reference: [Get Recent Trades](https://docs.bitpin.ir/#1dd63530b5)
 
 === "Sync"
 
@@ -473,15 +481,14 @@ Get recent trades.
 
 Get user open orders.
 
-:material-car-speed-limiter:{ .rateLimit } 1000/hour.
+!!! warning
+    :material-car-speed-limiter:{ .rateLimit } 1000/hour.
 
-??? reference "See Also"
+??? code-ref "Reference"
 
-    Sync Code Reference: [Client.get_open_orders](../reference/clients#src.bitpin.clients.client.Client.get_open_orders)
-
-    Async Code Reference: [AsyncClient.get_open_orders](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_open_orders)
-
-    API Reference: [Get User Open Orders](https://docs.bitpin.ir/#8a7c2a2af5)
+    - Sync Code Reference: [Client.get_open_orders](../reference/clients#src.bitpin.clients.client.Client.get_open_orders)
+    - Async Code Reference: [AsyncClient.get_open_orders](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_open_orders)
+    - API Documentation Reference: [Get User Open Orders](https://docs.bitpin.ir/#8a7c2a2af5)
 
 === "Sync"
 
@@ -525,15 +532,14 @@ Get user open orders.
 
 Create New Order.
 
-:material-car-speed-limiter:{ .rateLimit } 1000/hour.
+!!! warning
+    :material-car-speed-limiter:{ .rateLimit } 1000/hour.
 
-??? reference "See Also"
+??? code-ref "Reference"
 
-    Sync Code Reference: [Client.create_order](../reference/clients#src.bitpin.clients.client.Client.create_order)
-
-    Async Code Reference: [AsyncClient.create_order](../reference/clients#src.bitpin.clients.async_client.AsyncClient.create_order)
-
-    API Reference: [Create Order](https://docs.bitpin.ir/#34b353d77b)
+    - Sync Code Reference: [Client.create_order](../reference/clients#src.bitpin.clients.client.Client.create_order)
+    - Async Code Reference: [AsyncClient.create_order](../reference/clients#src.bitpin.clients.async_client.AsyncClient.create_order)
+    - API Documentation Reference: [Create Order](https://docs.bitpin.ir/#34b353d77b)
 
 === "Sync"
 
@@ -593,15 +599,14 @@ Create New Order.
 
 Cancel Order.
 
-:material-car-speed-limiter:{ .rateLimit } 1000/hour.
+!!! warning
+    :material-car-speed-limiter:{ .rateLimit } 1000/hour.
 
-??? reference "See Also"
+??? code-ref "Reference"
 
-    Sync Code Reference: [Client.cancel_order](../reference/clients#src.bitpin.clients.client.Client.cancel_order)
-
-    Async Code Reference: [AsyncClient.cancel_order](../reference/clients#src.bitpin.clients.async_client.AsyncClient.cancel_order)
-
-    API Reference: [Cancel Order](https://docs.bitpin.ir/#3fe8d57657)
+    - Sync Code Reference: [Client.cancel_order](../reference/clients#src.bitpin.clients.client.Client.cancel_order)
+    - Async Code Reference: [AsyncClient.cancel_order](../reference/clients#src.bitpin.clients.async_client.AsyncClient.cancel_order)
+    - API Documentation Reference: [Cancel Order](https://docs.bitpin.ir/#3fe8d57657)
 
 === "Sync"
 
@@ -646,15 +651,14 @@ Cancel Order.
 
 Get user recent trades.
 
-:material-car-speed-limiter:{ .rateLimit } 1000/hour.
+!!! warning
+    :material-car-speed-limiter:{ .rateLimit } 1000/hour.
 
-??? reference "See Also"
+??? code-ref "Reference"
 
-    Sync Code Reference: [Client.get_user_trades](../reference/clients#src.bitpin.clients.client.Client.get_user_trades)
-
-    Async Code Reference: [AsyncClient.get_user_trades](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_user_trades)
-
-    API Reference: [Get User Recent Trades](https://docs.bitpin.ir/#3fe8d57657)
+    - Sync Code Reference: [Client.get_user_trades](../reference/clients#src.bitpin.clients.client.Client.get_user_trades)
+    - Async Code Reference: [AsyncClient.get_user_trades](../reference/clients#src.bitpin.clients.async_client.AsyncClient.get_user_trades)
+    - API Documentation Reference: [Get User Recent Trades](https://docs.bitpin.ir/#3fe8d57657)
 
 === "Sync"
 

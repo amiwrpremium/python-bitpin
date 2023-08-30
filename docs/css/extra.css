@@ -28,3 +28,20 @@
 .rateLimit {
     animation: rateLimit 1000ms infinite;
 }
+
+.md-typeset .admonition.code-ref,
+.md-typeset details.code-ref {
+    border-color: rgb(43, 155, 70);
+}
+
+.md-typeset .code-ref > .admonition-title,
+.md-typeset .code-ref > summary {
+    background-color: rgba(43, 155, 70, 0.1);
+}
+
+.md-typeset .code-ref > .admonition-title::before,
+.md-typeset .code-ref > summary::before {
+    background-color: rgb(43, 155, 70);
+    -webkit-mask-image: var(--md-admonition-icon--code-ref);
+    mask-image: var(--md-admonition-icon--code-ref);
+}

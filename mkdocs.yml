@@ -7,6 +7,7 @@ repo_url: https://github.com/amiwrpremium/python-bitpin
 theme:
   name: material
   repo: fontawesome/brands/github
+  language: en
 
   palette:
     - media: "(prefers-color-scheme: light)"
@@ -20,6 +21,10 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to system preference
+
+  icon:
+    admonition:
+      code-ref: octicons/cross-reference-16
 
   features:
     - navigation.instant
