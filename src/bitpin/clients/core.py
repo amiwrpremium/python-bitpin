@@ -57,7 +57,7 @@ class CoreClient(ABC):
         self._requests_params = requests_params
         self.session = self._init_session()
 
-        self._hande_login()
+        self._handle_login()
 
     def _get_request_kwargs(self, method: t.RequestMethods, signed: bool, **kwargs) -> t.DictStrAny:  # type: ignore[no-untyped-def]
         kwargs["timeout"] = self.REQUEST_TIMEOUT
@@ -95,7 +95,7 @@ class CoreClient(ABC):
     def _create_api_uri(self, path: str, version: str = PUBLIC_API_VERSION_1) -> str:
         return self.API_URL + "/" + str(version) + "/" + path
 
-    def _hande_login(self) -> bool:
+    def _handle_login(self) -> bool:
         """
         Handle login.
 
@@ -107,15 +107,21 @@ class CoreClient(ABC):
             if not self.refresh_token:
                 import requests  # pylint: disable=import-outside-toplevel
 
-                _: t.LoginResponse = requests.post(
+                response = requests.post(
                     "https://api.bitpin.ir/v1/usr/api/login/",
                     headers={"Content-Type": "application/json"},
                     json={"api_key": self.api_key, "secret_key": self.api_secret},
                     timeout=self.REQUEST_TIMEOUT,
-                ).json()
+                )
 
-                self.refresh_token = _["refresh"]
-                self.access_token = _["access"]
+                if not str(response.status_code).startswith("2"):
+                    from ..exceptions import APIException  # pylint: disable=import-outside-toplevel
+
+                    raise APIException(response, response.status_code, response.text)
+
+                json: t.LoginResponse = response.json()
+                self.refresh_token = json["refresh"]
+                self.access_token = json["access"]
 
             return True
 
