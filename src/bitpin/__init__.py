@@ -10,7 +10,7 @@ __all__ = [
 
 
 # Meta
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 __author__ = "amiwrpremium"
 __email__ = "amiwrpremium@gmail.com"
 __license__ = "MIT"
