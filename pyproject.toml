@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "python-bitpin"
-version = "0.0.4"
+version = "0.0.5"
 description = "Bitpin Exchange Python SDK"
 authors = ["AMiWR <amiwrpremium@gmail.com>"]
 license = "MIT"
