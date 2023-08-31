@@ -33,7 +33,7 @@ Install from `git`
 
 ## Usage
 
-See [examples](https://python-bitpin.readthedocs.io/en/latest/examples/) for more usage examples.
+See [usage](https://python-bitpin.readthedocs.io/en/latest/usage/) for usage guide.
 
 ## Documentation
 

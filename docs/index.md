@@ -32,7 +32,7 @@ Install from `git`
 
 ## :octicons-code-16: Usage
 
-See [examples](https://python-bitpin.readthedocs.io/en/latest/examples/) for more usage examples.
+See [Usage](https://python-bitpin.readthedocs.io/en/latest/usage/) for usage guide.
 
 ## :material-file-document: Documentation
 

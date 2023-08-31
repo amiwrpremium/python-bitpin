@@ -87,7 +87,7 @@ extra:
 
 nav:
   - Introduction: index.md
-  - Examples: examples/
+  - Usage: usage/
   - Code Reference: reference/
 
 

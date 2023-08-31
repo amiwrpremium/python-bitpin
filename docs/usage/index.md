@@ -1,6 +1,6 @@
-# Examples
+# Usage
 
-Here are some examples which help you to get started with the library.
+Here are some snippets to get you started.
 
 ## Initiate
 
@@ -14,12 +14,21 @@ Initiate client.
 
     If `api_key` and `api_secret` are provided, client will login automatically and get access and refresh tokens.
 
+    You can also pass `access_token` and `refresh_token` to client to skip login.
+
 !!! tip "Environment variables are also supported."
 
     - :material-variable: `BITPIN_API_KEY` - API key.
     - :material-variable: `BITPIN_API_SECRET` - API secret.
     - :material-variable: `BITPIN_ACCESS_TOKEN` - Access token.
     - :material-variable: `BITPIN_REFRESH_TOKEN` - Refresh token.
+
+!!! tip "Background relogin is supported"
+
+    If you pass `background_relogin=True` to client, it will refresh access token automatically in background using
+    [concurrent.futures.ThreadPoolExecutor](https://docs.python.org/3/library/concurrent.futures.html#threadpoolexecutor).
+
+    You can also pass `background_relogin_interval` to client to set interval between each relogin.
 
 ??? code-ref "Reference"
 
