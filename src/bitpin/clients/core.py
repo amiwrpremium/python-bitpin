@@ -34,6 +34,8 @@ class CoreClient(ABC):
         api_key: t.OptionalStr = None,
         api_secret: t.OptionalStr = None,
         requests_params: t.OptionalDictStrAny = None,
+        background_relogin: bool = False,
+        background_relogin_interval: int = 60 * 13,
         **kwargs,
     ):
         """
@@ -43,6 +45,8 @@ class CoreClient(ABC):
             api_key (str): API key.
             api_secret (str): API secret.
             requests_params (dict): Requests params.
+            background_relogin (bool): Background refresh.
+            background_relogin_interval (int): Background refresh interval.
 
         Keyword Args:
             access_token (str): Access token.
@@ -58,6 +62,9 @@ class CoreClient(ABC):
             If `requests_params` are provided, they will be used as default for every request.
 
             If `requests_params` are provided in `kwargs`, they will override existing `requests_params`.
+
+            If `background_relogin` is enabled, access token will be refreshed in background every
+            `background_relogin_interval` seconds.
         """
 
         self.api_key = api_key or os.environ.get("BITPIN_API_KEY")
@@ -70,6 +77,7 @@ class CoreClient(ABC):
         self.session = self._init_session()
 
         self._handle_login()
+        self._background_relogin(background_relogin, background_relogin_interval)
 
     def _get_request_kwargs(self, method: t.RequestMethods, signed: bool, **kwargs) -> t.DictStrAny:  # type: ignore[no-untyped-def]
         kwargs["timeout"] = self.REQUEST_TIMEOUT
@@ -116,7 +124,7 @@ class CoreClient(ABC):
         """
 
         if self.api_key and self.api_secret:
-            if not self.refresh_token:
+            if self.refresh_token is None or self.access_token is None:
                 import requests  # pylint: disable=import-outside-toplevel
 
                 response = requests.post(
@@ -138,6 +146,29 @@ class CoreClient(ABC):
             return True
 
         return False
+
+    def _background_relogin(self, enabled: bool, interval: int) -> None:
+        """
+        Refresh access token in background using `_handle_login()`.
+
+        Args:
+            enabled (bool): Enabled.
+            interval (int): Interval in seconds.
+        """
+
+        import time  # pylint: disable=import-outside-toplevel
+        from concurrent.futures import ThreadPoolExecutor  # pylint: disable=import-outside-toplevel
+
+        if enabled:
+
+            def _run() -> None:
+                """Run."""
+                while True:
+                    time.sleep(interval)
+                    self.refresh_token, self.access_token = None, None
+                    self._handle_login()
+
+            ThreadPoolExecutor().submit(_run)
 
     @abstractmethod
     def _init_session(self) -> t.HttpSession:
