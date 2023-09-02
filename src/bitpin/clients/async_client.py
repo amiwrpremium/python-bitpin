@@ -316,15 +316,21 @@ class AsyncClient(CoreClient):
         """Background relogin task."""
 
         while True:
-            await asyncio.sleep(self._background_relogin_interval)
-            await self.login()
+            try:
+                await asyncio.sleep(self._background_relogin_interval)
+                await self.login()
+            except Exception:  # pylint: disable=broad-except
+                continue
 
     async def _background_refresh_token_task(self) -> None:  # type: ignore[override]
         """Background refresh token task."""
 
         while True:
-            await asyncio.sleep(self._background_refresh_token_interval)
-            await self.refresh_access_token()
+            try:
+                await asyncio.sleep(self._background_refresh_token_interval)
+                await self.refresh_access_token()
+            except Exception:  # pylint: disable=broad-except
+                continue
 
     async def _handle_login(self) -> None:  # type: ignore[override]
         """Handle login."""

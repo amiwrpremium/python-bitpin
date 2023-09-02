@@ -264,15 +264,21 @@ class Client(CoreClient):
         """Background relogin task."""
 
         while True:
-            time.sleep(self._background_relogin_interval)
-            self.login()
+            try:
+                time.sleep(self._background_relogin_interval)
+                self.login()
+            except Exception:  # pylint: disable=broad-except
+                continue
 
     def _background_refresh_token_task(self) -> None:
         """Background refresh token task."""
 
         while True:
-            time.sleep(self._background_refresh_token_interval)
-            self.refresh_access_token()
+            try:
+                time.sleep(self._background_refresh_token_interval)
+                self.refresh_access_token()
+            except Exception:  # pylint: disable=broad-except
+                continue
 
     def login(self, **kwargs) -> t.LoginResponse:  # type: ignore[no-untyped-def]
         """
