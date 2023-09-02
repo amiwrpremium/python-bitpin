@@ -30,6 +30,13 @@ Initiate client.
 
     You can also pass `background_relogin_interval` to client to set interval between each relogin.
 
+!!! tip "Background refresh access token is supported"
+
+    If you pass `background_refresh_token=True` to client, it will refresh access token automatically in background using
+    [concurrent.futures.ThreadPoolExecutor](https://docs.python.org/3/library/concurrent.futures.html#threadpoolexecutor).
+
+    You can also pass `background_refresh_token_interval` to client to set interval between each refresh.
+
 ??? code-ref "Reference"
 
     - Code Reference: [Client](../reference/clients)
