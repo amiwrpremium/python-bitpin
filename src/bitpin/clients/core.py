@@ -35,7 +35,9 @@ class CoreClient(ABC):
         api_secret: t.OptionalStr = None,
         requests_params: t.OptionalDictStrAny = None,
         background_relogin: bool = False,
-        background_relogin_interval: int = 60 * 13,
+        background_relogin_interval: int = 60 * 60 * 24 * 6,
+        background_refresh_token: bool = False,
+        background_refresh_token_interval: int = 60 * 13,
         **kwargs,
     ):
         """
@@ -47,6 +49,8 @@ class CoreClient(ABC):
             requests_params (dict): Requests params.
             background_relogin (bool): Background refresh.
             background_relogin_interval (int): Background refresh interval.
+            background_refresh_token (bool): Background refresh token.
+            background_refresh_token_interval (int): Background refresh token interval.
 
         Keyword Args:
             access_token (str): Access token.
@@ -65,6 +69,9 @@ class CoreClient(ABC):
 
             If `background_relogin` is enabled, access token will be refreshed in background every
             `background_relogin_interval` seconds.
+
+            If `background_refresh_token` is enabled, refresh token will be refreshed in background every
+            `background_refresh_token_interval` seconds.
         """
 
         self.api_key = api_key or os.environ.get("BITPIN_API_KEY")
@@ -77,7 +84,9 @@ class CoreClient(ABC):
         self.session = self._init_session()
 
         self._handle_login()
+
         self._background_relogin(background_relogin, background_relogin_interval)
+        self._background_refresh_token(background_refresh_token, background_refresh_token_interval)
 
     def _get_request_kwargs(self, method: t.RequestMethods, signed: bool, **kwargs) -> t.DictStrAny:  # type: ignore[no-untyped-def]
         kwargs["timeout"] = self.REQUEST_TIMEOUT
@@ -167,6 +176,40 @@ class CoreClient(ABC):
                     time.sleep(interval)
                     self.refresh_token, self.access_token = None, None
                     self._handle_login()
+
+            ThreadPoolExecutor().submit(_run)
+
+    def _background_refresh_token(self, enabled: bool, interval: int) -> None:
+        """
+        Refresh refresh token in background using `_handle_refresh_token()`.
+
+        Args:
+            enabled (bool): Enabled.
+            interval (int): Interval in seconds.
+        """
+
+        if enabled:
+            import time  # pylint: disable=import-outside-toplevel
+            import requests  # pylint: disable=import-outside-toplevel
+            from concurrent.futures import ThreadPoolExecutor  # pylint: disable=import-outside-toplevel
+
+            def _run() -> None:
+                """Run."""
+                while True:
+                    time.sleep(interval)
+                    response = requests.post(
+                        "https://api.bitpin.ir/v1/usr/refresh_token/",
+                        json={"refresh": self.refresh_token},
+                        headers={"Content-Type": "application/json"},
+                        timeout=self.REQUEST_TIMEOUT,
+                    )
+                    if not str(response.status_code).startswith("2"):
+                        from ..exceptions import APIException  # pylint: disable=import-outside-toplevel
+
+                        raise APIException(response, response.status_code, response.text)
+
+                    json: t.RefreshTokenResponse = response.json()
+                    self.access_token = json["access"]
 
             ThreadPoolExecutor().submit(_run)
 
