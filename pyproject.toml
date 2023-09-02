@@ -14,7 +14,6 @@ python = ">=3.9,<3.11"
 requests = "^2.31.0"
 aiohttp = "^3.8.5"
 pysocks = "^1.7.1"
-vulture = "^2.9.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -25,6 +24,7 @@ pylint = "^2.17.5"
 dead = "^1.5.2"
 pytype = "^2023.8.22"
 pydocstyle = "^6.3.0"
+vulture = "^2.9.1"
 
 
 [tool.poetry.group.docs.dependencies]
