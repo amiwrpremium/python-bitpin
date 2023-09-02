@@ -8,6 +8,7 @@ This file contains all the types used in the project.
 """
 
 import typing as t
+import asyncio
 import requests
 import aiohttp
 
@@ -20,6 +21,9 @@ OptionalFloat = t.Optional[float]
 
 DictStrAny = t.Dict[str, t.Any]
 OptionalDictStrAny = t.Optional[DictStrAny]
+
+EventLoop = asyncio.AbstractEventLoop
+OptionalEventLoop = t.Optional[EventLoop]
 
 # Client Types:
 OrderTypeBuy = t.Literal["buy"]

@@ -1,5 +1,7 @@
 """# Bitpin Client."""
 
+import time
+from threading import Thread
 import requests
 
 from .core import CoreClient
@@ -13,13 +15,6 @@ class Client(CoreClient):
     Client.
 
     Methods:
-        _init_session: Initialize session.
-        _get: Make a GET request.
-        _post: Make a POST request.
-        _delete: Make a DELETE request.
-        _request_api: Request API.
-        _request: Request.
-        _handle_response: Handle response.
         login: Login and set (refresh_token/access_token)
         refresh_access_token: Refresh token.
         get_user_info: Get user info.
@@ -41,6 +36,64 @@ class Client(CoreClient):
         refresh_token (str): Refresh token.
         access_token (str): Access token.
     """
+
+    def __init__(  # type: ignore[no-untyped-def]
+        self,
+        api_key: t.OptionalStr = None,
+        api_secret: t.OptionalStr = None,
+        access_token: t.OptionalStr = None,
+        refresh_token: t.OptionalStr = None,
+        requests_params: t.OptionalDictStrAny = None,
+        background_relogin: bool = False,
+        background_relogin_interval: int = 60 * 60 * 24 * 6,
+        background_refresh_token: bool = False,
+        background_refresh_token_interval: int = 60 * 13,
+    ):
+        """
+        Constructor.
+
+        Args:
+            api_key (str): API key.
+            api_secret (str): API secret.
+            access_token (str): Access token.
+            refresh_token (str): Refresh token.
+            requests_params (dict): Requests params.
+            background_relogin (bool): Background refresh.
+            background_relogin_interval (int): Background refresh interval.
+            background_refresh_token (bool): Background refresh token.
+            background_refresh_token_interval (int): Background refresh token interval.
+
+        Notes:
+            If `api_key` and `api_secret` are not provided, they will be read from the environment variables
+            `BITPIN_API_KEY` and `BITPIN_API_SECRET` respectively.
+
+            If `access_token` and `refresh_token` are not provided, they will be read from the environment variables
+            `BITPIN_ACCESS_TOKEN` and `BITPIN_REFRESH_TOKEN` respectively.
+
+            If `requests_params` are provided, they will be used as default for every request.
+
+            If `requests_params` are provided in `kwargs`, they will override existing `requests_params`.
+
+            If `background_relogin` is enabled, access token will be refreshed in background every
+            `background_relogin_interval` seconds.
+
+            If `background_refresh_token` is enabled, refresh token will be refreshed in background every
+            `background_refresh_token_interval` seconds.
+        """
+
+        super().__init__(
+            api_key,
+            api_secret,
+            access_token,
+            refresh_token,
+            requests_params,
+            background_relogin,
+            background_relogin_interval,
+            background_refresh_token,
+            background_refresh_token_interval,
+        )
+
+        self._handle_login()
 
     def _init_session(self) -> requests.Session:
         """
@@ -193,6 +246,33 @@ class Client(CoreClient):
             return response.json()  # type: ignore[no-any-return]
         except ValueError as exc:
             raise RequestException(f"Invalid Response: {response.text}") from exc
+
+    def _handle_login(self) -> None:
+        """Handle login."""
+
+        if self.api_key and self.api_secret:
+            if self.refresh_token is None or self.access_token is None:
+                self.login()
+
+        if self._background_relogin:
+            Thread(target=self._background_relogin_task, daemon=True).start()
+
+        if self._background_refresh_token:
+            Thread(target=self._background_refresh_token_task, daemon=True).start()
+
+    def _background_relogin_task(self) -> None:
+        """Background relogin task."""
+
+        while True:
+            time.sleep(self._background_relogin_interval)
+            self.login()
+
+    def _background_refresh_token_task(self) -> None:
+        """Background refresh token task."""
+
+        while True:
+            time.sleep(self._background_refresh_token_interval)
+            self.refresh_access_token()
 
     def login(self, **kwargs) -> t.LoginResponse:  # type: ignore[no-untyped-def]
         """

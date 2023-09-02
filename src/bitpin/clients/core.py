@@ -8,7 +8,7 @@ from abc import (
 from .. import types as t
 
 
-class CoreClient(ABC):
+class CoreClient(ABC):  # pylint: disable=too-many-instance-attributes
     """Core Client."""
 
     API_URL = "https://api.bitpin.ir"
@@ -33,12 +33,13 @@ class CoreClient(ABC):
         self,
         api_key: t.OptionalStr = None,
         api_secret: t.OptionalStr = None,
+        access_token: t.OptionalStr = None,
+        refresh_token: t.OptionalStr = None,
         requests_params: t.OptionalDictStrAny = None,
         background_relogin: bool = False,
         background_relogin_interval: int = 60 * 60 * 24 * 6,
         background_refresh_token: bool = False,
         background_refresh_token_interval: int = 60 * 13,
-        **kwargs,
     ):
         """
         Constructor.
@@ -46,15 +47,13 @@ class CoreClient(ABC):
         Args:
             api_key (str): API key.
             api_secret (str): API secret.
+            access_token (str): Access token.
+            refresh_token (str): Refresh token.
             requests_params (dict): Requests params.
             background_relogin (bool): Background refresh.
             background_relogin_interval (int): Background refresh interval.
             background_refresh_token (bool): Background refresh token.
             background_refresh_token_interval (int): Background refresh token interval.
-
-        Keyword Args:
-            access_token (str): Access token.
-            refresh_token (str): Refresh token.
 
         Notes:
             If `api_key` and `api_secret` are not provided, they will be read from the environment variables
@@ -65,7 +64,7 @@ class CoreClient(ABC):
 
             If `requests_params` are provided, they will be used as default for every request.
 
-            If `requests_params` are provided in `kwargs`, they will override existing `requests_params`.
+            If `requests_params` are provided in method's `kwargs`, they will override existing `requests_params`.
 
             If `background_relogin` is enabled, access token will be refreshed in background every
             `background_relogin_interval` seconds.
@@ -76,17 +75,16 @@ class CoreClient(ABC):
 
         self.api_key = api_key or os.environ.get("BITPIN_API_KEY")
         self.api_secret = api_secret or os.environ.get("BITPIN_API_SECRET")
+        self.access_token: t.OptionalStr = access_token or os.environ.get("BITPIN_ACCESS_TOKEN")
+        self.refresh_token: t.OptionalStr = refresh_token or os.environ.get("BITPIN_REFRESH_TOKEN")
 
-        self.access_token: t.OptionalStr = kwargs.get("access_token", os.environ.get("BITPIN_ACCESS_TOKEN"))
-        self.refresh_token: t.OptionalStr = kwargs.get("refresh_token", os.environ.get("BITPIN_REFRESH_TOKEN"))
+        self._background_relogin = background_relogin
+        self._background_relogin_interval = background_relogin_interval
+        self._background_refresh_token = background_refresh_token
+        self._background_refresh_token_interval = background_refresh_token_interval
 
         self._requests_params = requests_params
         self.session = self._init_session()
-
-        self._handle_login()
-
-        self._background_relogin(background_relogin, background_relogin_interval)
-        self._background_refresh_token(background_refresh_token, background_refresh_token_interval)
 
     def _get_request_kwargs(self, method: t.RequestMethods, signed: bool, **kwargs) -> t.DictStrAny:  # type: ignore[no-untyped-def]
         kwargs["timeout"] = self.REQUEST_TIMEOUT
@@ -123,95 +121,6 @@ class CoreClient(ABC):
 
     def _create_api_uri(self, path: str, version: str = PUBLIC_API_VERSION_1) -> str:
         return self.API_URL + "/" + str(version) + "/" + path
-
-    def _handle_login(self) -> bool:
-        """
-        Handle login.
-
-        Returns:
-            bool: True if login was successful.
-        """
-
-        if self.api_key and self.api_secret:
-            if self.refresh_token is None or self.access_token is None:
-                import requests  # pylint: disable=import-outside-toplevel
-
-                response = requests.post(
-                    "https://api.bitpin.ir/v1/usr/api/login/",
-                    headers={"Content-Type": "application/json"},
-                    json={"api_key": self.api_key, "secret_key": self.api_secret},
-                    timeout=self.REQUEST_TIMEOUT,
-                )
-
-                if not str(response.status_code).startswith("2"):
-                    from ..exceptions import APIException  # pylint: disable=import-outside-toplevel
-
-                    raise APIException(response, response.status_code, response.text)
-
-                json: t.LoginResponse = response.json()
-                self.refresh_token = json["refresh"]
-                self.access_token = json["access"]
-
-            return True
-
-        return False
-
-    def _background_relogin(self, enabled: bool, interval: int) -> None:
-        """
-        Refresh access token in background using `_handle_login()`.
-
-        Args:
-            enabled (bool): Enabled.
-            interval (int): Interval in seconds.
-        """
-
-        import time  # pylint: disable=import-outside-toplevel
-        from concurrent.futures import ThreadPoolExecutor  # pylint: disable=import-outside-toplevel
-
-        if enabled:
-
-            def _run() -> None:
-                """Run."""
-                while True:
-                    time.sleep(interval)
-                    self.refresh_token, self.access_token = None, None
-                    self._handle_login()
-
-            ThreadPoolExecutor().submit(_run)
-
-    def _background_refresh_token(self, enabled: bool, interval: int) -> None:
-        """
-        Refresh refresh token in background using `_handle_refresh_token()`.
-
-        Args:
-            enabled (bool): Enabled.
-            interval (int): Interval in seconds.
-        """
-
-        if enabled:
-            import time  # pylint: disable=import-outside-toplevel
-            import requests  # pylint: disable=import-outside-toplevel
-            from concurrent.futures import ThreadPoolExecutor  # pylint: disable=import-outside-toplevel
-
-            def _run() -> None:
-                """Run."""
-                while True:
-                    time.sleep(interval)
-                    response = requests.post(
-                        "https://api.bitpin.ir/v1/usr/refresh_token/",
-                        json={"refresh": self.refresh_token},
-                        headers={"Content-Type": "application/json"},
-                        timeout=self.REQUEST_TIMEOUT,
-                    )
-                    if not str(response.status_code).startswith("2"):
-                        from ..exceptions import APIException  # pylint: disable=import-outside-toplevel
-
-                        raise APIException(response, response.status_code, response.text)
-
-                    json: t.RefreshTokenResponse = response.json()
-                    self.access_token = json["access"]
-
-            ThreadPoolExecutor().submit(_run)
 
     @abstractmethod
     def _init_session(self) -> t.HttpSession:
@@ -329,6 +238,24 @@ class CoreClient(ABC):
         Returns:
             dict: Response.
         """
+
+        raise NotImplementedError
+
+    @abstractmethod
+    def _handle_login(self) -> None:
+        """Handle login."""
+
+        raise NotImplementedError
+
+    @abstractmethod
+    def _background_relogin_task(self) -> None:
+        """Background relogin task."""
+
+        raise NotImplementedError
+
+    @abstractmethod
+    def _background_refresh_token_task(self) -> None:
+        """Background refresh token task."""
 
         raise NotImplementedError
 
