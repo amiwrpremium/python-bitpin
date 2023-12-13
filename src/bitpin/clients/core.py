@@ -371,6 +371,7 @@ class CoreClient(ABC):  # pylint: disable=too-many-instance-attributes
         state: t.OptionalStr = None,
         mode: t.OptionalStr = None,
         identifier: t.OptionalStr = None,
+        page: int = 1,
         **kwargs,
     ) -> t.OpenOrdersResponse:
         """
@@ -382,6 +383,7 @@ class CoreClient(ABC):  # pylint: disable=too-many-instance-attributes
             state (str): State.
             mode (str): Mode.
             identifier (str): Identifier.
+            page (int): Page.
 
         Returns:
             dict: Response.
@@ -444,6 +446,7 @@ class CoreClient(ABC):  # pylint: disable=too-many-instance-attributes
         self,
         market_id: t.OptionalInt = None,
         type: t.OptionalOrderTypes = None,  # pylint: disable=redefined-builtin
+        page: int = 1,
         **kwargs,
     ) -> t.DictStrAny:
         """
@@ -452,6 +455,7 @@ class CoreClient(ABC):  # pylint: disable=too-many-instance-attributes
         Args:
             market_id (int): Market ID.
             type (str): Type.
+            page (int): Page.
 
         Returns:
             dict: Response.

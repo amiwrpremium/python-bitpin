@@ -514,6 +514,7 @@ class AsyncClient(CoreClient):
         state: t.OptionalStr = None,
         mode: t.OptionalStr = None,
         identifier: t.OptionalStr = None,
+        page: int = 1,
         **kwargs,
     ) -> t.OpenOrdersResponse:
         """
@@ -525,6 +526,7 @@ class AsyncClient(CoreClient):
             state (str): State.
             mode (str): Mode.
             identifier (str): Identifier.
+            page (int): Page.
             **kwargs: Kwargs.
 
         Returns:
@@ -598,6 +600,7 @@ class AsyncClient(CoreClient):
         self,
         market_id: t.OptionalInt = None,
         type: t.OptionalOrderTypes = None,  # pylint: disable=redefined-builtin
+        page: int = 1,
         **kwargs,
     ) -> t.DictStrAny:
         """
@@ -606,6 +609,7 @@ class AsyncClient(CoreClient):
         Args:
             market_id (int): Market ID.
             type (OrderTypes): Type.
+            page (int): Page.
             **kwargs: Kwargs.
 
         Returns:

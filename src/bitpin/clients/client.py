@@ -448,6 +448,7 @@ class Client(CoreClient):
         state: t.OptionalStr = None,
         mode: t.OptionalStr = None,
         identifier: t.OptionalStr = None,
+        page: int = 1,
         **kwargs,
     ) -> t.OpenOrdersResponse:
         """
@@ -459,6 +460,7 @@ class Client(CoreClient):
             state (str): State.
             mode (str): Mode.
             identifier (str): Identifier.
+            page (int): Page.
             **kwargs: Kwargs.
 
         Returns:
@@ -532,6 +534,7 @@ class Client(CoreClient):
         self,
         market_id: t.OptionalInt = None,
         type: t.OptionalOrderTypes = None,  # pylint: disable=redefined-builtin
+        page: int = 1,
         **kwargs,
     ) -> t.DictStrAny:
         """
@@ -540,6 +543,7 @@ class Client(CoreClient):
         Args:
             market_id (int): Market ID.
             type (OrderTypes): Type.
+            page (int): Page.
             **kwargs: Kwargs.
 
         Returns:
