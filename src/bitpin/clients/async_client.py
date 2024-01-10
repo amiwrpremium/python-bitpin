@@ -8,7 +8,10 @@ import aiohttp
 from .core import CoreClient
 from .. import types as t
 from .. import enums
-from ..exceptions import APIException, RequestException
+from ..exceptions import (
+    APIException,
+    RequestException,
+)
 from .._utils import get_loop
 
 
@@ -317,8 +320,8 @@ class AsyncClient(CoreClient):
 
         while True:
             try:
-                await asyncio.sleep(self._background_relogin_interval)
                 await self.login()
+                await asyncio.sleep(self._background_relogin_interval)
             except Exception:  # pylint: disable=broad-except
                 continue
 
@@ -327,8 +330,8 @@ class AsyncClient(CoreClient):
 
         while True:
             try:
-                await asyncio.sleep(self._background_refresh_token_interval)
                 await self.refresh_access_token()
+                await asyncio.sleep(self._background_refresh_token_interval)
             except Exception:  # pylint: disable=broad-except
                 continue
 
@@ -336,14 +339,13 @@ class AsyncClient(CoreClient):
         """Handle login."""
 
         if self.api_key and self.api_secret:
-            if self.refresh_token is None or self.access_token is None:
-                await self.login()
+            await self.login()
 
         if self._background_relogin:
-            self.loop.create_task(self._background_relogin_task())
+            self.loop.create_task(self._background_relogin_task())  # noqa
 
         if self._background_refresh_token:
-            self.loop.create_task(self._background_refresh_token_task())
+            self.loop.create_task(self._background_refresh_token_task())  # noqa
 
     async def login(self, **kwargs) -> t.LoginResponse:  # type: ignore[no-untyped-def, override]
         """
@@ -407,7 +409,9 @@ class AsyncClient(CoreClient):
 
         return await self._get(self.USER_INFO_URL, signed=True, **kwargs)
 
-    async def get_currencies_info(self, page: int = 1, **kwargs) -> t.DictStrAny:  # type: ignore[no-untyped-def, override]
+    async def get_currencies_info(  # type: ignore[no-untyped-def, override]
+        self, page: int = 1, **kwargs
+    ) -> t.DictStrAny:
         """
         Get currencies info.
 
@@ -490,7 +494,9 @@ class AsyncClient(CoreClient):
             self.ORDERBOOK_URL.format(market_id, str(type)), version=self.PUBLIC_API_VERSION_2, **kwargs
         )
 
-    async def get_recent_trades(self, market_id: int, **kwargs) -> t.TradeResponse:  # type: ignore[no-untyped-def, override]
+    async def get_recent_trades(  # type: ignore[no-untyped-def, override]
+        self, market_id: int, **kwargs
+    ) -> t.TradeResponse:
         """
         Get recent trades.
 
@@ -579,7 +585,9 @@ class AsyncClient(CoreClient):
         kwargs["json"] = {k: v for k, v in locals().items() if v is not None and k not in ("self", "kwargs")}
         return await self._post(self.ORDERS_URL, signed=True, **kwargs)  # type: ignore[return-value]
 
-    async def cancel_order(self, order_id: str, **kwargs) -> t.CancelOrderResponse:  # type: ignore[no-untyped-def, override]
+    async def cancel_order(  # type: ignore[no-untyped-def, override]
+        self, order_id: str, **kwargs
+    ) -> t.CancelOrderResponse:
         """
         Cancel order.
 

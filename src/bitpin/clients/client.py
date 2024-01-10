@@ -7,7 +7,10 @@ import requests
 from .core import CoreClient
 from .. import types as t
 from .. import enums
-from ..exceptions import APIException, RequestException
+from ..exceptions import (
+    APIException,
+    RequestException,
+)
 
 
 class Client(CoreClient):
@@ -251,8 +254,7 @@ class Client(CoreClient):
         """Handle login."""
 
         if self.api_key and self.api_secret:
-            if self.refresh_token is None or self.access_token is None:
-                self.login()
+            self.login()
 
         if self._background_relogin:
             Thread(target=self._background_relogin_task, daemon=True).start()
@@ -265,8 +267,8 @@ class Client(CoreClient):
 
         while True:
             try:
-                time.sleep(self._background_relogin_interval)
                 self.login()
+                time.sleep(self._background_relogin_interval)
             except Exception:  # pylint: disable=broad-except
                 continue
 
@@ -275,8 +277,8 @@ class Client(CoreClient):
 
         while True:
             try:
-                time.sleep(self._background_refresh_token_interval)
                 self.refresh_access_token()
+                time.sleep(self._background_refresh_token_interval)
             except Exception:  # pylint: disable=broad-except
                 continue
 
