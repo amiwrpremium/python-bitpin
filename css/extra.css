@@ -1,0 +1,47 @@
+.highlight .gp, .highlight .go { /* Generic.Prompt, Generic.Output */
+    user-select: none;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+@keyframes rateLimit {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+        color: #ff0000;
+    }
+}
+
+.pulse {
+    animation: pulse 1000ms infinite;
+}
+
+.rateLimit {
+    animation: rateLimit 1000ms infinite;
+}
+
+.md-typeset .admonition.code-ref,
+.md-typeset details.code-ref {
+    border-color: rgb(43, 155, 70);
+}
+
+.md-typeset .code-ref > .admonition-title,
+.md-typeset .code-ref > summary {
+    background-color: rgba(43, 155, 70, 0.1);
+}
+
+.md-typeset .code-ref > .admonition-title::before,
+.md-typeset .code-ref > summary::before {
+    background-color: rgb(43, 155, 70);
+    -webkit-mask-image: var(--md-admonition-icon--code-ref);
+    mask-image: var(--md-admonition-icon--code-ref);
+}
