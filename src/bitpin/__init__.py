@@ -1,12 +1,11 @@
 """# Bitpin Python Library."""
 
+import deprecated
+
 from .clients.async_client import AsyncClient
 from .clients.client import Client
 
-__all__ = [
-    "AsyncClient",
-    "Client",
-]
+__all__ = ["AsyncClient", "Client", "deprecated"]
 
 
 # Meta

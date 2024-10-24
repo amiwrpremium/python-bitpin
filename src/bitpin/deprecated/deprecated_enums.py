@@ -1,7 +1,7 @@
 """
 # Enums.
 
-Enum classes for the Bitpin API.
+Enum classes for the BitPin API.
 """
 
 from enum import (
@@ -196,10 +196,3 @@ class RequestMethod(str, Enum):
     POST = "post"
     PUT = "put"
     DELETE = "delete"
-
-
-class OrderBookQuoteAsset(str, Enum):
-    """Order Book Quote Assets"""
-
-    USDT = "USDT"
-    IRT = "IRT"

@@ -9,7 +9,7 @@ This module contains all the exceptions that are raised by the bitpin package.
 
 import json
 
-from . import types as t
+from . import response_types as t
 
 
 class APIException(Exception):
